@@ -3,18 +3,18 @@ NUMLIVES = 3;
 GAMEOVER = 0;
 LEVELNUMBER = "LEVEL 1";
 TIME = 0;
+SCORE=0;
+HIGHSCORE=0;
 
-VEHICLES = {"originalPosition":{ "x":190, "y":482}, "currentPosition":{"x":190,"y":482}};
-LOGS = {"originalPosition":{ "x":190, "y":482}, "currentPosition":{"x":190,"y":482}};
+VEHICLES = [{"originalPosition":{ "x":171, "y":378}, "currentPosition":{"x":171,"y":378}}];
+LOGS = [{"originalPosition":{ "x":215, "y":204}, "currentPosition":{"x":215,"y":204}}];
 SPEEDVEHICLES = 10;
 SPEEDLOGS = 10;
-FROG = {"originalPosition":{"x":190, "y":482}, "currentPosition":{"x":190,"y":482}};
+FROG = {'originalPosition':{'x':190,'y':485},'currentPosition':{'x':190,'y':485}};
 ORANGEBORDERWIDTH = 1;
 ORANGEBORDERHEIGHT = 1;
 WATERHEIGHT = 276;
 WATERWIDTH = 398;
-SPRITESHEETFIRSTGRAYHEIGHT = 12;
-SPRITESHEETFROGGERGRAYWIDTH = 15;
 HIGHWAYWIDTH = 399;
 HIGHWAYHEIGHT = 172;
 PURPLERECTWIDTH= 399;
@@ -25,7 +25,8 @@ function start_game(){
 	var gameboard=document.getElementById('game');
 	if(gameboard.getContext){
 		drawstaticimages(gameboard);
-		drawchangingimages(gameboard);	
+		drawchangingimages(gameboard);
+		drawText(gameboard);	
 	} else {
 		console.log("Canvas is not supported for this browser.");
 	}
@@ -66,5 +67,17 @@ function drawchangingimages(drawing){
 			ImageArea.drawImage(SpriteSheet, 14, 335, 17, 22, 40, 1+WATERHEIGHT+PURPLERECTHEIGHT+HIGHWAYHEIGHT+PURPLERECTHEIGHT+3, 17, 22);
 			}
 	}
-	ImageArea.drawImage(SpriteSheet, 14, 356, 17, 22, 1,FROG['originalPosition']['x'], FROG['originalPosition']['y'], 17, 22);
+	ImageArea.drawImage(SpriteSheet, 14, 363, 20, 22, FROG['currentPosition']['x'], FROG['currentPosition']['y'], 17, 22);
+	ImageArea.drawImage(SpriteSheet, 8, 231, 87, 22, LOGS[0]['currentPosition']['x'], LOGS[0]['currentPosition']['y'], 87, 22);
+	ImageArea.drawImage(SpriteSheet, 8, 266, 31, 21, VEHICLES[0]['currentPosition']['x'], VEHICLES[0]['currentPosition']['y'], 31, 21);
+}
+
+function drawText(drawing){
+	ImageArea=drawing.getContext('2d');
+	ImageArea.font = '20pt Calibri';
+    ImageArea.fillStyle = '#7FFF00';
+    ImageArea.fillText(LEVELNUMBER, 60, 1+WATERHEIGHT+PURPLERECTHEIGHT+HIGHWAYHEIGHT+PURPLERECTHEIGHT+3+21);
+    ImageArea.font='10pt Calibri';
+    ImageArea.fillText("SCORE : "+SCORE, 1, 1+WATERHEIGHT+PURPLERECTHEIGHT+HIGHWAYHEIGHT+PURPLERECTHEIGHT+3+40);
+    ImageArea.fillText("HIGHSCHORE : "+HIGHSCORE, 70, 1+WATERHEIGHT+PURPLERECTHEIGHT+HIGHWAYHEIGHT+PURPLERECTHEIGHT+3+40);
 }
