@@ -1,7 +1,7 @@
 Google Map (w/ extra goodies), by Spencer Meldrum
 
-Things correctly implemented: Everything except for the display of carmen sandiego and Waldo's coordinates. These I tried to get on a canvas but they did not end up working.
+Things correctly implemented: Everything, to my knowledge, is implemented correctly.
 
-Help: I got some help with the generation of map markers from kids around me in COMP20 class, Inbar Fried in particular
+Help: I got some help with the generation of map markers from kids around me in COMP20 class, Inbar Fried in particular. Also Zoe Sobin helped out with windows.
 
 Hours Spent: 10 hours
