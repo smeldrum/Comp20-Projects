@@ -1,6 +1,4 @@
 	var currentLocation;
-	var carmenPopup = new google.maps.InfoWindow();
-	var waldoPopup = new google.maps.InfoWindow();
 	var waldoMarker;
 	var carmenMarker;
 	var myMarker
@@ -195,7 +193,7 @@ function placeMyLocation(){
 		myMarker.setMap(bostonMap);
 		closestStation = findClosestStation();
 		stationPopup.setContent("I am here at ("+myLatitude+", "+myLongitude+"). The closest station to me is "+closestStation['title']+" which is "+closestStationDistance+" miles away from me");
-		stationPopup.open(bostonMap, locationMarker);
+		stationPopup.open(bostonMap, myMarker);
 		addWaldoAndCarmen();
 
 	
