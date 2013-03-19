@@ -6,8 +6,7 @@ TIME = 0;
 SCORE=0;
 HIGHSCORE=0;
 
-VEHICLES = [{"originalPosition":{ "x":171, "y":378}, "currentPosition":{"x":171,"y":378}}];
-LOGS = [{"originalPosition":{ "x":215, "y":204}, "currentPosition":{"x":215,"y":204}}];
+
 SPEEDVEHICLES = 10;
 SPEEDLOGS = 10;
 FROG = {'originalPosition':{'x':190,'y':485},'currentPosition':{'x':190,'y':485}};
@@ -20,12 +19,40 @@ HIGHWAYHEIGHT = 172;
 PURPLERECTWIDTH= 399;
 PURPLERECTHEIGHT = 35;
 GAMEBOARDWIDTH=399;
+VEHICLESLEFT = [{"originalPosition":{ "x":171, "y":378}, "currentPosition":{"x":171,"y":378}, "sprite":{"startx":9, "starty":268, "x": 30, "y":28}}];
+LOGSLEFT = [];
+LOGSRIGHT = [];
+VEHICLESRIGHT = [{"originalPosition":{ "x":171, "y":378}, "currentPosition":{"x":171,"y":378}}];
 
-
+function fillArrays(){
+	for(var x=0; x<7; x++){
+	if(x%2!=0){
+		firstLog= {"originalPosition":{ "x":-30, "y":WATERHEIGHT-(x+1)*24-1}, "currentPosition":{"x":0,"y":WATERHEIGHT-(x+1)*24-1}, "sprite":{"startx":8,"starty":229,"x":88,"y":24}};
+		LOGSLEFT[3*x]=firstLog;
+		secondLog = {"originalPosition":{ "x":100, "y":WATERHEIGHT-(x+1)*24-1}, "currentPosition":{"x":100,"y":WATERHEIGHT-(x+1)*24-1}, "sprite":{"startx":8,"starty":194,"x":121,"y":24}};
+		LOGSLEFT[3*x+1]=secondLog;
+		thirdLog = {"originalPosition":{ "x":250, "y":WATERHEIGHT-(x+1)*24-1}, "currentPosition":{"x":250,"y":WATERHEIGHT-(x+1)*24-1}, "sprite":{"startx":8,"starty":162,"x":179,"y":24}};
+		LOGSLEFT[3*x+2]=thirdLog;
+		} else {
+		firstLog= {"originalPosition":{ "x":350, "y":WATERHEIGHT-(x+1)*24-1}, "currentPosition":{"x":350,"y":WATERHEIGHT-(x+1)*24-1}, "sprite":{"startx":8,"starty":229,"x":88,"y":24}};
+		LOGSLEFT[3*x]=firstLog;
+		secondLog = {"originalPosition":{ "x":10, "y":WATERHEIGHT-(x+1)*24-1}, "currentPosition":{"x":30,"y":WATERHEIGHT-(x+1)*24-1}, "sprite":{"startx":8,"starty":194,"x":121,"y":24}};
+		LOGSLEFT[3*x+1]=secondLog;
+		thirdLog = {"originalPosition":{ "x":150, "y":WATERHEIGHT-(x+1)*24-1}, "currentPosition":{"x":150,"y":WATERHEIGHT-(x+1)*24-1}, "sprite":{"startx":8,"starty":162,"x":179,"y":24}};
+		LOGSLEFT[3*x+2]=thirdLog;
+		}
+		
+		/*LOGSRIGHT.push({"originalPosition":{ "x":308, "y":WATERHEIGHT+1-23}, "currentPosition":{"x":308,"y":WATERHEIGHT+1-23}, "sprite":{"startx":8,"starty":229,"x":88,"y":23}});
+		LOGSRIGHT.push({{"originalPosition":{ "x":110, "y":WATERHEIGHT+1-23}, "currentPosition":{"x":185,"y":WATERHEIGHT+1-23}, "sprite":{"startx":8,"starty":194,"x":121,"y":23}}});
+		LOGSRIGHT.push({"originalPosition":{ "x":0, "y":WATERHEIGHT+1-23}, "currentPosition":{"x":0,"y":WATERHEIGHT+1-23}, "sprite":{"startx":8,"starty":162,"x":179,"y":23}});*/
+		
+	}
+}
 
 function start_game(){
 	var gameboard=document.getElementById('game');
 	if(gameboard.getContext){
+		fillArrays();
 		initializeBoard(); //will be used if life lost as well
 		drawstaticimages(gameboard);
 		drawchangingimages(gameboard);
@@ -62,7 +89,6 @@ function drawchangingimages(drawing){
 	ImageArea=drawing.getContext('2d');
 	SpriteSheet= new Image();
 	SpriteSheet.src="assets/frogger_sprites.png";
-	//will check before this will print whether no lives, and end the game
 	ImageArea.drawImage(SpriteSheet, 14, 335, 17, 22, 1, 1+WATERHEIGHT+PURPLERECTHEIGHT+HIGHWAYHEIGHT+PURPLERECTHEIGHT+3, 17, 22); //Life #1
 	if(NUMLIVES>=2){
 		ImageArea.drawImage(SpriteSheet, 14, 335, 17, 22, 20, 1+WATERHEIGHT+PURPLERECTHEIGHT+HIGHWAYHEIGHT+PURPLERECTHEIGHT+3, 17, 22); //Life #2
@@ -71,8 +97,12 @@ function drawchangingimages(drawing){
 			}
 	}
 	ImageArea.drawImage(SpriteSheet, 14, 363, 20, 22, FROG['currentPosition']['x'], FROG['currentPosition']['y'], 17, 22); //Drawing the frog
-	ImageArea.drawImage(SpriteSheet, 8, 231, 87, 22, LOGS[0]['currentPosition']['x'], LOGS[0]['currentPosition']['y'], 87, 22); //Drawing the logs (only 1 for now)
-	ImageArea.drawImage(SpriteSheet, 8, 266, 31, 21, VEHICLES[0]['currentPosition']['x'], VEHICLES[0]['currentPosition']['y'], 31, 21); //Drawing the Vehicles (only 1 for now)
+	for(index in LOGSLEFT){
+	ImageArea.drawImage(SpriteSheet, LOGSLEFT[index].sprite.startx, LOGSLEFT[index].sprite.starty, LOGSLEFT[index].sprite.x, LOGSLEFT[index].sprite.y, LOGSLEFT[index]['currentPosition']['x'], LOGSLEFT[index]['currentPosition']['y'], LOGSLEFT[index].sprite.x, LOGSLEFT[index].sprite.y); 
+	}
+	for(index in VEHICLESLEFT){
+	ImageArea.drawImage(SpriteSheet, VEHICLESLEFT[index].sprite.startx, VEHICLESLEFT[index].sprite.starty, VEHICLESLEFT[index].sprite.x, VEHICLESLEFT[index].sprite.y, VEHICLESLEFT[index]['currentPosition']['x'], VEHICLESLEFT[index]['currentPosition']['y'], VEHICLESLEFT[index].sprite.x, VEHICLESLEFT[index].sprite.y);
+		}
 }
 
 function drawText(drawing){
@@ -82,14 +112,18 @@ function drawText(drawing){
     ImageArea.fillText("LEVEL "+LEVELNUMBER, 60, 1+WATERHEIGHT+PURPLERECTHEIGHT+HIGHWAYHEIGHT+PURPLERECTHEIGHT+3+21);
     ImageArea.font='10pt Calibri';
     ImageArea.fillText("SCORE : "+SCORE, 1, 1+WATERHEIGHT+PURPLERECTHEIGHT+HIGHWAYHEIGHT+PURPLERECTHEIGHT+3+40);
-    ImageArea.fillText("HIGHSCHORE : "+HIGHSCORE, 70, 1+WATERHEIGHT+PURPLERECTHEIGHT+HIGHWAYHEIGHT+PURPLERECTHEIGHT+3+40);
+    ImageArea.fillText("HIGHSCORE : "+HIGHSCORE, 70, 1+WATERHEIGHT+PURPLERECTHEIGHT+HIGHWAYHEIGHT+PURPLERECTHEIGHT+3+40);
 }
 
 function initializeBoard(){
 	FROG['currentPosition']['x']= FROG['originalPosition']['x'];
 	FROG['currentPosition']['y']=FROG['originalPosition']['y'];
-	VEHICLES[0]['currentPosition']['x']=VEHICLES[0]['originalPosition']['x'];
-	VEHICLES[0]['currentPosition']['y']=VEHICLES[0]['originalPosition']['y'];
-	LOGS[0]['currentPosition']['x']=LOGS[0]['originalPosition']['x'];
-	LOGS[0]['currentPosition']['y']=LOGS[0]['originalPosition']['y'];
+	for(index in VEHICLESLEFT){
+		VEHICLESLEFT[index]['currentPosition']['x']=VEHICLESLEFT[index]['originalPosition']['x'];
+		VEHICLESLEFT[index]['currentPosition']['y']=VEHICLESLEFT[index]['originalPosition']['y'];
+	}
+	for(index in LOGSLEFT){
+	LOGSLEFT[index]['currentPosition']['x']=LOGSLEFT[index]['originalPosition']['x'];
+	LOGSLEFT[index]['currentPosition']['y']=LOGSLEFT[index]['originalPosition']['y'];
+	}
 }
