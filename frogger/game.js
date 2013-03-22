@@ -83,17 +83,21 @@ function start_game(){
 	gameboard=document.getElementById('game');
 	if(gameboard.getContext){
 		fillArrays();
+        document.onkeydown = checkUserInput;
 		runGameLoop();
-        setInterval(runGameLoop, 100);
+        intervalID=setInterval(runGameLoop, 100);
 	} else {
 		console.log("Canvas is not supported for this browser.");
 	}
 }
 
 function runGameLoop(){
-		checkUserInput();
 		updateBoard();
 		if(GAMEOVER==1){
+            console.log("Game over! Play again!");
+            NUMLIVES=3;
+            
+
 		}
 		drawstaticimages(gameboard);
 		drawchangingimages(gameboard);
@@ -101,8 +105,25 @@ function runGameLoop(){
 	
 }
 
-function checkUserInput(){
-	
+function checkUserInput(event){
+        if(event.keyCode==37){
+            FROG.currentPosition.x -= 15;
+            if(FROG.currentPosition.x<0){
+                FROG.currentPosition.x=0;
+            }
+        }
+        if(window.event.keyCode==39){
+            FROG.currentPosition.x += 15;
+            if(FROG.currentPosition.x>383){
+                FROG.currentPosition.x=383;
+            }
+        }
+        if(window.event.keyCode==38){
+            FROG.currentPosition.y -= 15;
+        }
+        if(window.event.keyCode==40){
+            FROG.currentPosition.y += 15;
+        }
 }
 
 function updateBoard(){
