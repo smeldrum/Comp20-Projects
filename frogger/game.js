@@ -102,6 +102,7 @@ function runGameLoop(){
 		drawstaticimages(gameboard);
 		drawchangingimages(gameboard);
 		drawText(gameboard);
+    
 	
 }
 
@@ -112,16 +113,16 @@ function checkUserInput(event){
                 FROG.currentPosition.x=0;
             }
         }
-        if(window.event.keyCode==39){
+        if(event.keyCode==39){
             FROG.currentPosition.x += 15;
             if(FROG.currentPosition.x>383){
                 FROG.currentPosition.x=383;
             }
         }
-        if(window.event.keyCode==38){
+        if(event.keyCode==38){
             FROG.currentPosition.y -= 15;
         }
-        if(window.event.keyCode==40){
+        if(event.keyCode==40){
             FROG.currentPosition.y += 15;
         }
 }
@@ -151,6 +152,16 @@ function updateBoard(){
             VEHICLESLEFT[index]['currentPosition']['x']=400;
         }
     }
+    checkFrogLocation();
+}
+
+function checkFrogLocation(){
+        for(index in VEHICLESLEFT){
+            if((FROG['currentPosition']['x']+17>VEHICLESLEFT[index]['currentPosition']['x'] && FROG['currentPosition']['y']+22>VEHICLESLEFT[index]['currentPosition']['y'])|| (VEHICLESLEFT[index]['currentPosition']['x']+VEHICLESLEFT[index]['sprite']['x']>FROG['currentPosition']['x'] && VEHICLESLEFT[index]['currentPosition']['y']+VEHICLESLEFT[index]['sprite']['y']>FROG['currentPosition']['y'])){
+                NUMLIVES-=1;
+                initializeBoard();
+            }
+        }
 }
 
 function drawstaticimages(){
