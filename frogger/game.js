@@ -5,10 +5,11 @@ LEVELNUMBER = 1;
 TIME = 0;
 SCORE=0;
 HIGHSCORE=0;
+PROBLEMFOUND=0;
+ONLOG=0;
+LEVELPASSED=0;
 
 
-SPEEDVEHICLES = 10;
-SPEEDLOGS = 10;
 FROG = {'originalPosition':{'x':190,'y':485},'currentPosition':{'x':190,'y':485}};
 ORANGEBORDERWIDTH = 1;
 ORANGEBORDERHEIGHT = 1;
@@ -23,26 +24,35 @@ VEHICLESLEFT = [];
 LOGSLEFT = [];
 LOGSRIGHT = [];
 VEHICLESRIGHT = [];
+LILLYPADS = [];
 
 function fillArrays(){
-	for(var x=0; x<7; x++){
+	for(var x=0; x<6; x++){
 	if(x%2!=0){
-		firstLog= {"originalPosition":{ "x":-30, "y":WATERHEIGHT-(x+1)*24-1}, "currentPosition":{"x":-30,"y":WATERHEIGHT-(x+1)*24-1}, "sprite":{"startx":8,"starty":229,"x":88,"y":24}, "speed":x/2+2};
+		firstLog= {"originalPosition":{ "x":-30, "y":WATERHEIGHT+1-(x+1)*27}, "currentPosition":{"x":-30,"y":WATERHEIGHT+1-(x+1)*27}, "sprite":{"startx":8,"starty":229,"x":88,"y":27}, "speed":x/2+2};
 		LOGSLEFT.push(firstLog);
-		secondLog = {"originalPosition":{ "x":100, "y":WATERHEIGHT-(x+1)*24-1}, "currentPosition":{"x":100,"y":WATERHEIGHT-(x+1)*24-1}, "sprite":{"startx":8,"starty":194,"x":121,"y":24}, "speed":(x/2)+2};
+        console.log(WATERHEIGHT+1-(x+1)*27);
+		secondLog = {"originalPosition":{ "x":100, "y":WATERHEIGHT+1-(x+1)*27}, "currentPosition":{"x":100,"y":WATERHEIGHT+1-(x+1)*27}, "sprite":{"startx":8,"starty":194,"x":121,"y":27}, "speed":(x/2)+2};
 		LOGSLEFT.push(secondLog);
-		thirdLog = {"originalPosition":{ "x":250, "y":WATERHEIGHT-(x+1)*24-1}, "currentPosition":{"x":250,"y":WATERHEIGHT-(x+1)*24-1}, "sprite":{"startx":8,"starty":162,"x":179,"y":24}, "speed":x/2+2};
+        console.log(WATERHEIGHT+1-(x+1)*27);
+		thirdLog = {"originalPosition":{ "x":250, "y":WATERHEIGHT+1-(x+1)*27}, "currentPosition":{"x":250,"y":WATERHEIGHT+1-(x+1)*27}, "sprite":{"startx":8,"starty":162,"x":179,"y":27}, "speed":x/2+2};
 		LOGSLEFT.push(thirdLog);
+        console.log(WATERHEIGHT+1-(x+1)*27);
 		} else {
-		firstLog= {"originalPosition":{ "x":350, "y":WATERHEIGHT-(x+1)*24-1}, "currentPosition":{"x":350,"y":WATERHEIGHT-(x+1)*24-1}, "sprite":{"startx":8,"starty":229,"x":88,"y":24}, "speed":5-(x/3)};
+		firstLog= {"originalPosition":{ "x":350, "y":WATERHEIGHT+1-(x+1)*27}, "currentPosition":{"x":350,"y":WATERHEIGHT+1-(x+1)*27}, "sprite":{"startx":8,"starty":229,"x":88,"y":27}, "speed":5-(x/3)};
+            console.log(WATERHEIGHT+1-(x+1)*27);
 		LOGSRIGHT.push(firstLog);
-		secondLog = {"originalPosition":{ "x":0, "y":WATERHEIGHT-(x+1)*24-1}, "currentPosition":{"x":0,"y":WATERHEIGHT-(x+1)*24-1}, "sprite":{"startx":8,"starty":194,"x":121,"y":24}, "speed":5-(x/3)};
+		secondLog = {"originalPosition":{ "x":0, "y":WATERHEIGHT+1-(x+1)*27}, "currentPosition":{"x":0,"y":WATERHEIGHT+1-(x+1)*27}, "sprite":{"startx":8,"starty":194,"x":121,"y":27}, "speed":5-(x/3)};
 		LOGSRIGHT.push(secondLog);
-		thirdLog = {"originalPosition":{ "x":150, "y":WATERHEIGHT-(x+1)*24-1}, "currentPosition":{"x":150,"y":WATERHEIGHT-(x+1)*24-1}, "sprite":{"startx":8,"starty":162,"x":179,"y":24}, "speed":5-(x/3)};
+            console.log(WATERHEIGHT+1-(x+1)*27);
+		thirdLog = {"originalPosition":{ "x":150, "y":WATERHEIGHT+1-(x+1)*27}, "currentPosition":{"x":150,"y":WATERHEIGHT+1-(x+1)*27}, "sprite":{"startx":8,"starty":162,"x":179,"y":27}, "speed":5-(x/3)};
+            console.log(WATERHEIGHT+1-(x+1)*27);
 		LOGSRIGHT.push(thirdLog);
 		}
+        
 		
 	}
+    fillLillyPads();
 	firstVehicle = {"originalPosition":{ "x":171, "y":390}, "currentPosition":{"x":171,"y":390}, "sprite":{"startx":7, "starty":268, "x": 30, "y":28}, "speed":4};
 	VEHICLESLEFT.push(firstVehicle);
 	secondVehicle = {"originalPosition":{ "x":310, "y":390}, "currentPosition":{"x":310,"y":390}, "sprite":{"startx":7, "starty":268, "x": 30, "y":28}, "speed":4};
@@ -78,7 +88,11 @@ function fillArrays(){
 	thirdVehicle = {"originalPosition":{ "x":310, "y":WATERHEIGHT+35+HIGHWAYHEIGHT-140}, "currentPosition":{"x":310, "y":WATERHEIGHT+35+HIGHWAYHEIGHT-140}, "sprite":{"startx":46, "starty":264, "x": 29, "y":26}, "speed":7};
 	VEHICLESRIGHT.push(thirdVehicle);
 }
-
+function fillLillyPads(){
+    for(var x=0; x<5; x++){
+        LILLYPADS[x] = [12+(x)*85, 84, 30, 30];
+    }
+}
 function start_game(){
 	gameboard=document.getElementById('game');
 	if(gameboard.getContext){
@@ -94,9 +108,10 @@ function start_game(){
 function runGameLoop(){
 		updateBoard();
 		if(GAMEOVER==1){
-            console.log("Game over! Play again!");
+            alert("Game over! Play again!");
             NUMLIVES=3;
-            
+            GAMEOVER=0;
+            initializeBoard();
 
 		}
 		drawstaticimages(gameboard);
@@ -108,61 +123,130 @@ function runGameLoop(){
 
 function checkUserInput(event){
         if(event.keyCode==37){
-            FROG.currentPosition.x -= 15;
+            FROG.currentPosition.x -= 12;
             if(FROG.currentPosition.x<0){
                 FROG.currentPosition.x=0;
             }
         }
         if(event.keyCode==39){
-            FROG.currentPosition.x += 15;
+            FROG.currentPosition.x += 12;
             if(FROG.currentPosition.x>383){
                 FROG.currentPosition.x=383;
             }
         }
         if(event.keyCode==38){
-            FROG.currentPosition.y -= 15;
+            FROG.currentPosition.y -= 12;
         }
         if(event.keyCode==40){
-            FROG.currentPosition.y += 15;
+            FROG.currentPosition.y += 12;
         }
 }
 
 function updateBoard(){
+    frogX = FROG.currentPosition.x;
+    frogY = FROG.currentPosition.y;
+    ONLOG=0;
+    PROBLEMFOUND=0;
 	for(index in LOGSLEFT){
         LOGSLEFT[index]['currentPosition']['x'] = LOGSLEFT[index]['currentPosition']['x'] - LOGSLEFT[index]['speed'];
         if(LOGSLEFT[index]['currentPosition']['x']<=-175){
             LOGSLEFT[index]['currentPosition']['x'] = 400;
+        } else if(frogY+22<=WATERHEIGHT && ONLOG==0){
+            var vehicleX = LOGSLEFT[index]['currentPosition']['x'];
+            var vehicleY = LOGSLEFT[index]['currentPosition']['y'];
+            var fullVehicleX = vehicleX+LOGSLEFT[index]['sprite']['x'];
+            var fullVehicleY = vehicleY+LOGSLEFT[index]['sprite']['y'];
+            if(fullVehicleX >= frogX+13 && vehicleX<= frogX+2 && fullVehicleY >= frogY+8 && vehicleY <= frogY+6){
+                FROG.currentPosition.x -= LOGSLEFT[index]['speed'];
+                if(FROG.currentPosition.x<=0){
+                    PROBLEMFOUND=1;
+                    }
+                ONLOG=1;
+                }
+            }
         }
-    }
+    if(PROBLEMFOUND==0){
     for(index in LOGSRIGHT){
         LOGSRIGHT[index]['currentPosition']['x'] = LOGSRIGHT[index]['currentPosition']['x'] + LOGSRIGHT[index]['speed'];
         if(LOGSRIGHT[index]['currentPosition']['x']>=400){
             LOGSRIGHT[index]['currentPosition']['x'] = -175;
+        } else if(frogY+22<WATERHEIGHT && ONLOG==0){
+            var vehicleX = LOGSRIGHT[index]['currentPosition']['x'];
+            var vehicleY = LOGSRIGHT[index]['currentPosition']['y'];
+            var fullVehicleX = vehicleX+LOGSRIGHT[index]['sprite']['x'];
+            var fullVehicleY = vehicleY+LOGSRIGHT[index]['sprite']['y'];
+            if(fullVehicleX >= frogX+13 && vehicleX<= frogX+2 && fullVehicleY >= frogY+8 && vehicleY <= frogY+6){
+                FROG.currentPosition.x += LOGSRIGHT[index]['speed'];
+                if(FROG.currentPosition.x>=HIGHWAYWIDTH-17){
+                    PROBLEMFOUND=1;
+                }
+                ONLOG=1;
+            }
+            
+            }
         }
+        }
+    if(frogY+22<WATERHEIGHT && ONLOG==0){
+        PROBLEMFOUND=1;
     }
+    if(PROBLEMFOUND==0){
     for(index in VEHICLESRIGHT){
         VEHICLESRIGHT[index]['currentPosition']['x'] = VEHICLESRIGHT[index]['currentPosition']['x'] + VEHICLESRIGHT[index]['speed'];
         if(VEHICLESRIGHT[index]['currentPosition']['x']>=400){
             VEHICLESRIGHT[index]['currentPosition']['x'] = -50;
+        } else {
+            var vehicleX = VEHICLESRIGHT[index]['currentPosition']['x'];
+            var vehicleY = VEHICLESRIGHT[index]['currentPosition']['y'];
+            var fullVehicleX = vehicleX+VEHICLESRIGHT[index]['sprite']['x'];
+            var fullVehicleY = vehicleY+VEHICLESRIGHT[index]['sprite']['y'];
+            if(fullVehicleX >= frogX && fullVehicleX <= frogX+17 && fullVehicleY >= frogY && fullVehicleY <= frogY+22){
+                PROBLEMFOUND=1;
+            } else if(frogX + 17 >= vehicleX && frogX+17 <= fullVehicleX && frogY >= vehicleY && frogY <= fullVehicleY) {
+                PROBLEMFOUND=1;
+                }
+            }
         }
     }
+    if(PROBLEMFOUND==0){
     for(index in VEHICLESLEFT){
         VEHICLESLEFT[index]['currentPosition']['x'] = VEHICLESLEFT[index]['currentPosition']['x'] - VEHICLESLEFT[index]['speed'];
         if(VEHICLESLEFT[index]['currentPosition']['x']<=-50){
             VEHICLESLEFT[index]['currentPosition']['x']=400;
-        }
-    }
-    checkFrogLocation();
-}
-
-function checkFrogLocation(){
-        for(index in VEHICLESLEFT){
-            if((FROG['currentPosition']['x']+17>VEHICLESLEFT[index]['currentPosition']['x'] && FROG['currentPosition']['y']+22>VEHICLESLEFT[index]['currentPosition']['y'])|| (VEHICLESLEFT[index]['currentPosition']['x']+VEHICLESLEFT[index]['sprite']['x']>FROG['currentPosition']['x'] && VEHICLESLEFT[index]['currentPosition']['y']+VEHICLESLEFT[index]['sprite']['y']>FROG['currentPosition']['y'])){
-                NUMLIVES-=1;
-                initializeBoard();
+        } else {
+            var vehicleX = VEHICLESLEFT[index]['currentPosition']['x'];
+            var vehicleY = VEHICLESLEFT[index]['currentPosition']['y'];
+            var fullVehicleX = vehicleX+VEHICLESLEFT[index]['sprite']['x'];
+            var fullVehicleY = vehicleY+VEHICLESLEFT[index]['sprite']['y'];
+            if(fullVehicleX >= frogX && fullVehicleX <= frogX+17 && fullVehicleY >= frogY && fullVehicleY <= frogY+22){
+                PROBLEMFOUND=1;
+            } else if(frogX + 17 >= vehicleX && frogX+17 <= fullVehicleX && frogY >= vehicleY && frogY <= fullVehicleY) {
+                PROBLEMFOUND=1;
             }
         }
+    }
+    }
+    if(PROBLEMFOUND==1){
+        if(frogY+22 < WATERHEIGHT){
+            for(index in LILLYPADS){
+                if(LILLYPADS[index][0]<=frogX && LILLYPADS[index][0]+LILLYPADS[index][2]>=frogX+15 && frogY+10<=LILLYPADS[index][1]+LILLYPADS[index][3]){
+                    LEVELPASSED=1;
+                }
+            }
+        }
+        if(LEVELPASSED==1){
+            LEVELNUMBER++;
+            initializeBoard();
+            LEVELPASSED=0;
+        } else {
+        PROBLEMFOUND--;
+        NUMLIVES--;
+        if(NUMLIVES!=0){
+        initializeBoard();
+        } else GAMEOVER++;
+    }
+    }
 }
+
 
 function drawstaticimages(){
 	ImageArea=gameboard.getContext('2d');
@@ -177,7 +261,13 @@ function drawstaticimages(){
 	SpriteSheet= new Image();
 	SpriteSheet.src="assets/frogger_sprites.png";
 	ImageArea.drawImage(SpriteSheet, 15, 12, 320, 30, 15, 13, 320, 30); //Frogger Sign
-	ImageArea.drawImage(SpriteSheet, 0, 55, GAMEBOARDWIDTH, 53, 1, 59, GAMEBOARDWIDTH, 53); //Green thing
+	ImageArea.drawImage(SpriteSheet, 0, 55, GAMEBOARDWIDTH, 53, 1, 61, GAMEBOARDWIDTH, 53); //Green thing
+    for(index in LILLYPADS){
+        ImageArea.beginPath();
+        ImageArea.rect(LILLYPADS[index][0], LILLYPADS[index][1], LILLYPADS[index][2], LILLYPADS[index][3]);
+        ImageArea.fillStyle = "#458B00";
+        ImageArea.fill();
+    }
 	ImageArea.drawImage(SpriteSheet, 0, 118, GAMEBOARDWIDTH, 35, 1, WATERHEIGHT, PURPLERECTWIDTH, PURPLERECTHEIGHT); //Purple Rectangle 1
 	ImageArea.drawImage(SpriteSheet, 0, 118, GAMEBOARDWIDTH, 35, 1, WATERHEIGHT+34+HIGHWAYHEIGHT, PURPLERECTWIDTH, PURPLERECTHEIGHT);  //Purple Rectangle 2
 	ImageArea.beginPath();
@@ -197,7 +287,7 @@ function drawchangingimages(){
 			ImageArea.drawImage(SpriteSheet, 14, 335, 17, 22, 40, 1+WATERHEIGHT+PURPLERECTHEIGHT+HIGHWAYHEIGHT+PURPLERECTHEIGHT+3, 17, 22); //Life #3
 			}
 	}
-	ImageArea.drawImage(SpriteSheet, 14, 363, 20, 22, FROG['currentPosition']['x'], FROG['currentPosition']['y'], 17, 22); //Drawing the frog
+	 //Drawing the frog
 	for(index in LOGSLEFT){
 	ImageArea.drawImage(SpriteSheet, LOGSLEFT[index].sprite.startx, LOGSLEFT[index].sprite.starty, LOGSLEFT[index].sprite.x, LOGSLEFT[index].sprite.y, LOGSLEFT[index]['currentPosition']['x'], LOGSLEFT[index]['currentPosition']['y'], LOGSLEFT[index].sprite.x, LOGSLEFT[index].sprite.y); 
 	}
@@ -210,6 +300,7 @@ function drawchangingimages(){
     for(index in VEHICLESRIGHT){
         ImageArea.drawImage(SpriteSheet, VEHICLESRIGHT[index].sprite.startx, VEHICLESRIGHT[index].sprite.starty, VEHICLESRIGHT[index].sprite.x, VEHICLESRIGHT[index].sprite.y, VEHICLESRIGHT[index]['currentPosition']['x'], VEHICLESRIGHT[index]['currentPosition']['y'], VEHICLESRIGHT[index].sprite.x, VEHICLESRIGHT[index].sprite.y);
     }
+    ImageArea.drawImage(SpriteSheet, 14, 363, 20, 22, FROG['currentPosition']['x'], FROG['currentPosition']['y'], 17, 22);
 }
 
 function drawText(drawing){
