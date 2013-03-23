@@ -8,6 +8,7 @@ HIGHSCORE=0;
 PROBLEMFOUND=0;
 ONLOG=0;
 LEVELPASSED=0;
+FROGSHOME=0;
 
 
 FROG = {'originalPosition':{'x':190,'y':485},'currentPosition':{'x':190,'y':485}};
@@ -136,6 +137,7 @@ function checkUserInput(event){
         }
         if(event.keyCode==38){
             FROG.currentPosition.y -= 12;
+            SCORE= SCORE +10;
         }
         if(event.keyCode==40){
             FROG.currentPosition.y += 12;
@@ -234,15 +236,25 @@ function updateBoard(){
             }
         }
         if(LEVELPASSED==1){
-            LEVELNUMBER++;
+            FROGSHOME++;
+            SCORE+=50;
+            PROBLEMFOUND=0;
+            if(FROGSHOME==5){
+                SCORE+=1000;
+                FROGSHOME=0;
+            }
             initializeBoard();
             LEVELPASSED=0;
         } else {
-        PROBLEMFOUND--;
+        PROBLEMFOUND=0;
         NUMLIVES--;
         if(NUMLIVES!=0){
         initializeBoard();
-        } else GAMEOVER++;
+        } else {
+            GAMEOVER++;
+            if(SCORE>HIGHSCORE) HIGHSCORE=SCORE;
+            SCORE=0;
+        }
     }
     }
 }
