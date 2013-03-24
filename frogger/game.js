@@ -2,13 +2,15 @@
 NUMLIVES = 3;
 GAMEOVER = 0;
 LEVELNUMBER = 1;
-TIME = 0;
+TIMECOUNT=0;
+TIME = 30;
 SCORE=0;
 HIGHSCORE=0;
 PROBLEMFOUND=0;
 ONLOG=0;
 LEVELPASSED=0;
 FROGSHOME=0;
+LIVESADDED=0;
 
 
 FROG = {'originalPosition':{'x':190,'y':485},'currentPosition':{'x':190,'y':485}};
@@ -26,7 +28,14 @@ LOGSLEFT = [];
 LOGSRIGHT = [];
 VEHICLESRIGHT = [];
 LILLYPADS = [];
+DEADFROG = [];
+deadFrogPic = new Image();
+deadFrogPic.src = "assets/dead_frog.png";
+FLY = {};
+FLYSENTINEL = 0;
+FLYTIMER = 0;
 
+//using for loops with variables to create rows of logs with different attributes
 function fillArrays(){
 	for(var x=0; x<6; x++){
 	if(x%2!=0){
@@ -54,39 +63,39 @@ function fillArrays(){
 		
 	}
     fillLillyPads();
-	firstVehicle = {"originalPosition":{ "x":171, "y":390}, "currentPosition":{"x":171,"y":390}, "sprite":{"startx":7, "starty":268, "x": 30, "y":28}, "speed":4};
+	firstVehicle = {"originalPosition":{ "x":171, "y":390}, "currentPosition":{"x":171,"y":390}, "sprite":{"startx":7, "starty":268, "x": 30, "y":20}, "speed":4+LEVELNUMBER};
 	VEHICLESLEFT.push(firstVehicle);
-	secondVehicle = {"originalPosition":{ "x":310, "y":390}, "currentPosition":{"x":310,"y":390}, "sprite":{"startx":7, "starty":268, "x": 30, "y":28}, "speed":4};
+	secondVehicle = {"originalPosition":{ "x":310, "y":390}, "currentPosition":{"x":310,"y":390}, "sprite":{"startx":7, "starty":268, "x": 30, "y":20}, "speed":4+LEVELNUMBER};
 	VEHICLESLEFT.push(secondVehicle);
-	thirdVehicle = {"originalPosition":{ "x":30, "y":390}, "currentPosition":{"x":30,"y":390}, "sprite":{"startx":7, "starty":268, "x": 30, "y":28}, "speed": 4};
+	thirdVehicle = {"originalPosition":{ "x":30, "y":390}, "currentPosition":{"x":30,"y":390}, "sprite":{"startx":7, "starty":268, "x": 30, "y":20}, "speed": 4+LEVELNUMBER};
 	VEHICLESLEFT.push(thirdVehicle);
 	
-	firstVehicle = {"originalPosition":{ "x":50, "y":ORANGEBORDERHEIGHT+WATERHEIGHT+34}, "currentPosition":{"x":50, "y":ORANGEBORDERHEIGHT+WATERHEIGHT+34}, "sprite":{"startx":82, "starty":265, "x": 25, "y":25}, "speed": 5};
+	firstVehicle = {"originalPosition":{ "x":50, "y":ORANGEBORDERHEIGHT+WATERHEIGHT+34}, "currentPosition":{"x":50, "y":ORANGEBORDERHEIGHT+WATERHEIGHT+34}, "sprite":{"startx":82, "starty":265, "x": 25, "y":25}, "speed": 5+(LEVELNUMBER-1)*3};
 	VEHICLESLEFT.push(firstVehicle);
-	secondVehicle = {"originalPosition":{ "x":100, "y":ORANGEBORDERHEIGHT+WATERHEIGHT+34}, "currentPosition":{"x":200, "y":ORANGEBORDERHEIGHT+WATERHEIGHT+34}, "sprite":{"startx":82, "starty":265, "x": 25, "y":25}, "speed":5};
+	secondVehicle = {"originalPosition":{ "x":100, "y":ORANGEBORDERHEIGHT+WATERHEIGHT+34}, "currentPosition":{"x":200, "y":ORANGEBORDERHEIGHT+WATERHEIGHT+34}, "sprite":{"startx":82, "starty":265, "x": 25, "y":25}, "speed":5+(LEVELNUMBER-1)*3};
 	VEHICLESLEFT.push(secondVehicle);
-	thirdVehicle = {"originalPosition":{ "x":250, "y":ORANGEBORDERHEIGHT+WATERHEIGHT+34}, "currentPosition":{"x":300, "y":ORANGEBORDERHEIGHT+WATERHEIGHT+34}, "sprite":{"startx":82, "starty":265, "x": 25, "y":25}, "speed":5};
+	thirdVehicle = {"originalPosition":{ "x":250, "y":ORANGEBORDERHEIGHT+WATERHEIGHT+34}, "currentPosition":{"x":300, "y":ORANGEBORDERHEIGHT+WATERHEIGHT+34}, "sprite":{"startx":82, "starty":265, "x": 25, "y":25}, "speed":5+(LEVELNUMBER-1)*3};
 	VEHICLESLEFT.push(thirdVehicle);
 	
-	firstVehicle = {"originalPosition":{ "x":10, "y":WATERHEIGHT+35+HIGHWAYHEIGHT-30}, "currentPosition":{"x":10, "y":WATERHEIGHT+35+HIGHWAYHEIGHT-30}, "sprite":{"startx":104, "starty":302, "x": 49, "y":18}, "speed":6};
+	firstVehicle = {"originalPosition":{ "x":10, "y":WATERHEIGHT+35+HIGHWAYHEIGHT-30}, "currentPosition":{"x":10, "y":WATERHEIGHT+35+HIGHWAYHEIGHT-30}, "sprite":{"startx":104, "starty":302, "x": 49, "y":18}, "speed":6+LEVELNUMBER-1};
 	VEHICLESLEFT.push(firstVehicle);
-	secondVehicle = {"originalPosition":{ "x":110, "y":WATERHEIGHT+35+HIGHWAYHEIGHT-30}, "currentPosition":{"x":110, "y":WATERHEIGHT+35+HIGHWAYHEIGHT-30}, "sprite":{"startx":104, "starty":302, "x": 49, "y":18}, "speed":6};
+	secondVehicle = {"originalPosition":{ "x":110, "y":WATERHEIGHT+35+HIGHWAYHEIGHT-30}, "currentPosition":{"x":110, "y":WATERHEIGHT+35+HIGHWAYHEIGHT-30}, "sprite":{"startx":104, "starty":302, "x": 49, "y":18}, "speed":6+LEVELNUMBER-1};
 	VEHICLESLEFT.push(secondVehicle);
-	thirdVehicle = {"originalPosition":{ "x":200, "y":WATERHEIGHT+35+HIGHWAYHEIGHT-30}, "currentPosition":{"x":300, "y":WATERHEIGHT+35+HIGHWAYHEIGHT-30}, "sprite":{"startx":104, "starty":302, "x": 49, "y":18}, "speed":6};
+	thirdVehicle = {"originalPosition":{ "x":200, "y":WATERHEIGHT+35+HIGHWAYHEIGHT-30}, "currentPosition":{"x":300, "y":WATERHEIGHT+35+HIGHWAYHEIGHT-30}, "sprite":{"startx":104, "starty":302, "x": 49, "y":18}, "speed":6+LEVELNUMBER-1};
 	VEHICLESLEFT.push(thirdVehicle);
 
-	firstVehicle = {"originalPosition":{ "x":30, "y":WATERHEIGHT+35+HIGHWAYHEIGHT-60}, "currentPosition":{"x":30, "y":WATERHEIGHT+35+HIGHWAYHEIGHT-60}, "sprite":{"startx":9, "starty":300, "x": 26, "y":23}, "speed":4};
+	firstVehicle = {"originalPosition":{ "x":30, "y":WATERHEIGHT+35+HIGHWAYHEIGHT-60}, "currentPosition":{"x":30, "y":WATERHEIGHT+35+HIGHWAYHEIGHT-60}, "sprite":{"startx":9, "starty":300, "x": 26, "y":23}, "speed":4+LEVELNUMBER*2-2};
 	VEHICLESRIGHT.push(firstVehicle);
-	secondVehicle = {"originalPosition":{ "x":100, "y":WATERHEIGHT+35+HIGHWAYHEIGHT-60}, "currentPosition":{"x":150, "y":WATERHEIGHT+35+HIGHWAYHEIGHT-60}, "sprite":{"startx":9, "starty":300, "x": 26, "y":23}, "speed":4};
+	secondVehicle = {"originalPosition":{ "x":100, "y":WATERHEIGHT+35+HIGHWAYHEIGHT-60}, "currentPosition":{"x":150, "y":WATERHEIGHT+35+HIGHWAYHEIGHT-60}, "sprite":{"startx":9, "starty":300, "x": 26, "y":23}, "speed":4+LEVELNUMBER*2-2};
 	VEHICLESRIGHT.push(secondVehicle);
-	thirdVehicle = {"originalPosition":{ "x":310, "y":WATERHEIGHT+35+HIGHWAYHEIGHT-60}, "currentPosition":{"x":310, "y":WATERHEIGHT+35+HIGHWAYHEIGHT-60}, "sprite":{"startx":9, "starty":300, "x": 26, "y":23}, "speed":4};
+	thirdVehicle = {"originalPosition":{ "x":310, "y":WATERHEIGHT+35+HIGHWAYHEIGHT-60}, "currentPosition":{"x":310, "y":WATERHEIGHT+35+HIGHWAYHEIGHT-60}, "sprite":{"startx":9, "starty":300, "x": 26, "y":23}, "speed":4+LEVELNUMBER*2-2};
 	VEHICLESRIGHT.push(thirdVehicle);
     
-	firstVehicle = {"originalPosition":{ "x":30, "y":WATERHEIGHT+35+HIGHWAYHEIGHT-140}, "currentPosition":{"x":30, "y":WATERHEIGHT+35+HIGHWAYHEIGHT-140}, "sprite":{"startx":46, "starty":264, "x": 29, "y":26}, "speed":7};
+	firstVehicle = {"originalPosition":{ "x":30, "y":WATERHEIGHT+35+HIGHWAYHEIGHT-140}, "currentPosition":{"x":30, "y":WATERHEIGHT+35+HIGHWAYHEIGHT-140}, "sprite":{"startx":46, "starty":264, "x": 29, "y":26}, "speed":7+LEVELNUMBER};
 	VEHICLESRIGHT.push(firstVehicle);
-	secondVehicle = {"originalPosition":{ "x":100, "y":WATERHEIGHT+35+HIGHWAYHEIGHT-140}, "currentPosition":{"x":150, "y":WATERHEIGHT+35+HIGHWAYHEIGHT-140}, "sprite":{"startx":46, "starty":264, "x": 29, "y":26}, "speed":7};
+	secondVehicle = {"originalPosition":{ "x":100, "y":WATERHEIGHT+35+HIGHWAYHEIGHT-140}, "currentPosition":{"x":150, "y":WATERHEIGHT+35+HIGHWAYHEIGHT-140}, "sprite":{"startx":46, "starty":264, "x": 29, "y":26}, "speed":7+LEVELNUMBER};
 	VEHICLESRIGHT.push(secondVehicle);
-	thirdVehicle = {"originalPosition":{ "x":310, "y":WATERHEIGHT+35+HIGHWAYHEIGHT-140}, "currentPosition":{"x":310, "y":WATERHEIGHT+35+HIGHWAYHEIGHT-140}, "sprite":{"startx":46, "starty":264, "x": 29, "y":26}, "speed":7};
+	thirdVehicle = {"originalPosition":{ "x":310, "y":WATERHEIGHT+35+HIGHWAYHEIGHT-140}, "currentPosition":{"x":310, "y":WATERHEIGHT+35+HIGHWAYHEIGHT-140}, "sprite":{"startx":46, "starty":264, "x": 29, "y":26}, "speed":7+LEVELNUMBER};
 	VEHICLESRIGHT.push(thirdVehicle);
 }
 function fillLillyPads(){
@@ -135,20 +144,49 @@ function checkUserInput(event){
                 FROG.currentPosition.x=383;
             }
         }
+        //forward press gets 10 more points
         if(event.keyCode==38){
             FROG.currentPosition.y -= 12;
             SCORE= SCORE +10;
         }
         if(event.keyCode==40){
             FROG.currentPosition.y += 12;
+            if(FROG.currentPosition.y>WATERHEIGHT+34+HIGHWAYHEIGHT+PURPLERECTHEIGHT-22){
+                FROG.currentPosition.y = WATERHEIGHT+34+HIGHWAYHEIGHT+PURPLERECTHEIGHT-22;
+            }
         }
 }
-
+//crux of the program.  Found it hard to modularize so it is too large
 function updateBoard(){
+    if(Math.floor(Math.random()*500)>=490){
+        FLY.x = Math.floor(Math.random()*HIGHWAYWIDTH);
+        FLY.y = Math.floor(Math.random()*WATERHEIGHT+34+HIGHWAYHEIGHT+PURPLERECTHEIGHT-22);
+        FLYTIMER = 200;
+        FLYSENTINEL = 1;
+    }
+    if(SCORE>10000*(LIVESADDED+1) && NUMLIVES<3){
+        NUMLIVES++;
+    }
+    PROBLEMFOUND=0;
+    TIMECOUNT++;
+    if(TIMECOUNT==10){
+        TIME--;
+        TIMECOUNT=0;
+    }
+    //
+    if(TIME==0){
+        PROBLEMFOUND=1;
+    }
     frogX = FROG.currentPosition.x;
     frogY = FROG.currentPosition.y;
     ONLOG=0;
-    PROBLEMFOUND=0;
+    if(FLYSENTINEL==1){
+        if(frogX + 5 >= FLY.x && frogX <=FLY.x + 10 && frogY + 3 >= FLY.y && frogY <= FLY.y + 12){
+            SCORE +=200;
+            FLYSENTINEL=0;
+            FLYTIMER = 0;
+        }
+    }
 	for(index in LOGSLEFT){
         LOGSLEFT[index]['currentPosition']['x'] = LOGSLEFT[index]['currentPosition']['x'] - LOGSLEFT[index]['speed'];
         if(LOGSLEFT[index]['currentPosition']['x']<=-175){
@@ -188,9 +226,11 @@ function updateBoard(){
             }
         }
         }
+    //not on log
     if(frogY+22<WATERHEIGHT && ONLOG==0){
         PROBLEMFOUND=1;
     }
+    //Continues to check for problemfound so that it doesn't have to run through the entire function if it finds something that is not right
     if(PROBLEMFOUND==0){
     for(index in VEHICLESRIGHT){
         VEHICLESRIGHT[index]['currentPosition']['x'] = VEHICLESRIGHT[index]['currentPosition']['x'] + VEHICLESRIGHT[index]['speed'];
@@ -227,6 +267,7 @@ function updateBoard(){
         }
     }
     }
+    //loop that checks, although problemfound is 1, if frog has landed on lillypad
     if(PROBLEMFOUND==1){
         if(frogY+22 < WATERHEIGHT){
             for(index in LILLYPADS){
@@ -236,24 +277,31 @@ function updateBoard(){
             }
         }
         if(LEVELPASSED==1){
+            SCORE+= 10*TIME;
             FROGSHOME++;
             SCORE+=50;
             PROBLEMFOUND=0;
             if(FROGSHOME==5){
                 SCORE+=1000;
                 FROGSHOME=0;
+                LEVELNUMBER++;
             }
             initializeBoard();
             LEVELPASSED=0;
         } else {
         PROBLEMFOUND=0;
         NUMLIVES--;
+            DEADFROG['x']= frogX;
+            DEADFROG['y']= frogY;
+            DEADFROG['num'] = 20;
+            
         if(NUMLIVES!=0){
         initializeBoard();
         } else {
+            LIVESADDED = 0;
             GAMEOVER++;
             if(SCORE>HIGHSCORE) HIGHSCORE=SCORE;
-            SCORE=0;
+            SCORE = 0;
         }
     }
     }
@@ -286,7 +334,6 @@ function drawstaticimages(){
 	ImageArea.rect(ORANGEBORDERWIDTH,ORANGEBORDERHEIGHT+WATERHEIGHT+PURPLERECTHEIGHT+HIGHWAYHEIGHT+PURPLERECTHEIGHT-2,HIGHWAYWIDTH, 50);
 	ImageArea.fillStyle = "#000000";
 	ImageArea.fill(); //Bottom black area
-
 }
 
 function drawchangingimages(){
@@ -321,10 +368,28 @@ function drawText(drawing){
     ImageArea.fillText("LEVEL "+LEVELNUMBER, 60, 1+WATERHEIGHT+PURPLERECTHEIGHT+HIGHWAYHEIGHT+PURPLERECTHEIGHT+3+21);
     ImageArea.font='10pt Calibri';
     ImageArea.fillText("SCORE : "+SCORE, 1, 1+WATERHEIGHT+PURPLERECTHEIGHT+HIGHWAYHEIGHT+PURPLERECTHEIGHT+3+40);
-    ImageArea.fillText("HIGHSCORE : "+HIGHSCORE, 70, 1+WATERHEIGHT+PURPLERECTHEIGHT+HIGHWAYHEIGHT+PURPLERECTHEIGHT+3+40);
+    ImageArea.fillText("HIGHSCORE : "+HIGHSCORE, 100, 1+WATERHEIGHT+PURPLERECTHEIGHT+HIGHWAYHEIGHT+PURPLERECTHEIGHT+3+40);
+    ImageArea.fillText("TIME LEFT: "+TIME, 200, 1+WATERHEIGHT+PURPLERECTHEIGHT+HIGHWAYHEIGHT+PURPLERECTHEIGHT+3+40);
+    if(DEADFROG['num']>=0){
+        ImageArea.drawImage(deadFrogPic, DEADFROG['x'], DEADFROG['y']);
+        DEADFROG['num']-=1;
+    }
+    if(FLYSENTINEL == 1){
+        if(FLYTIMER == 0){
+            FLYSENTINEL = 0;
+        } else {
+            ImageArea.drawImage(SpriteSheet, 139, 236, 19, 16, FLY.x, FLY.y, 19, 16);
+            FLYTIMER--;
+            
+        }
+    }
 }
 
 function initializeBoard(){
+    FLYSENTINEL = 0;
+    FLYTIMER = 0;
+    TIME=30;
+    TIMECOUNT=0;
 	FROG['currentPosition']['x']= FROG['originalPosition']['x'];
 	FROG['currentPosition']['y']=FROG['originalPosition']['y'];
 	for(index in VEHICLESLEFT){
