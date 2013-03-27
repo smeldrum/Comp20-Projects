@@ -158,7 +158,7 @@ function checkUserInput(event){
 }
 //crux of the program.  Found it hard to modularize so it is too large
 function updateBoard(){
-    if(Math.floor(Math.random()*500)>=490){
+    if(Math.floor(Math.random()*500)>=493){
         FLY.x = Math.floor(Math.random()*HIGHWAYWIDTH);
         FLY.y = Math.floor(Math.random()*WATERHEIGHT+34+HIGHWAYHEIGHT+PURPLERECTHEIGHT-22);
         FLYTIMER = 200;
