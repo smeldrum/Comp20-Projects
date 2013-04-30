@@ -5,22 +5,26 @@
 
 <head>
 <script>
+function loadUpdates(){
+	statuses = "";
+	for(key in localStorage){
+			statuses = "<p>"+localStorage[key]+"</p>"+statuses;
+	}
+	document.getElementById('status').innerHTML=statuses;
+}
 function update(){
 	var Message=document.getElementById('msg').value;
 	var ThisDate=new Date();
-	var time=ThisDate.getMonth()+"/"+ThisDate.getDate()+"/"+ThisDate.getFullYear()+" "+ThisDate.getHours()+":"+ThisDate.getMinutes();
-	Message=time +" - "+ Message;
-	var StatusUpdate=document.createElement("p");
-	var text=document.createTextNode(Message);
-	StatusUpdate.appendChild(text);
-	var olderNode=document.getElementById('status').firstChild;
-	document.getElementById('status').insertBefore(StatusUpdate,olderNode);
+	modifiedDate = ThisDate.getMonth()+1;
+	var time=modifiedDate+"/"+ThisDate.getDate()+"/"+ThisDate.getFullYear()+" "+ThisDate.getHours()+":"+ThisDate.getMinutes();
+	localStorage[ThisDate.getTime()]=time+" - "+Message;
+	loadUpdates();
 }
 </script>
 <title>Fecesbook</title>
 </head>
 
-<body>
+<body onload="loadUpdates()">
 	<h1>Fecebook</h1>
 	<div id="nav">
 		<ul>
