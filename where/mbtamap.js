@@ -1,7 +1,7 @@
 	var currentLocation;
 	var waldoMarker;
 	var carmenMarker;
-	var myMarker
+	var myMarker;
 	myIcon = "images/armadillo.jpg";
 	carmenIcon = "images/carmen.png";
 	waldoIcon = "images/waldo.png";
